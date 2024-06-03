@@ -1,0 +1,134 @@
+1: #include <stdio.h>
+2: #include <string.h>
+3:
+4: #define NUM_ALUNOS 5
+5: #define NUM_NOTAS 4
+6:
+7: typedef struct {
+8: char nome[50];
+9: float notas[NUM_NOTAS];
+10: float nota_total;
+11: float media;
+12: char resultado[20];
+13: } Aluno;
+14:
+15: void cadastrarAlunos(Aluno alunos[]);
+16: void atribuirNotas(Aluno alunos[]);
+17: void processarNotas(Aluno alunos[]);
+18: void exibirResultados(Aluno alunos[]);
+19: void editarResultado(Aluno alunos[]);
+20: void menu();
+21:
+22: int main() {
+23: Aluno alunos[NUM_ALUNOS] = {0};
+24: int opcao;
+25:
+26: do {
+27: menu();
+28: scanf("%d", &opcao);
+29:
+30: switch(opcao) {
+31: case 1:
+32: cadastrarAlunos(alunos);
+33: break;
+34: case 2:
+35: atribuirNotas(alunos);
+36: break;
+37: case 3:
+38: processarNotas(alunos);
+39: break;
+40: case 4:
+41: exibirResultados(alunos);
+42: break;
+43: case 5:
+44: editarResultado(alunos);
+45: break;
+46: case 0:
+47: printf("Saindo do sistema...\n");
+48: break;
+49: default:
+50: printf("Opção inválida. Tente novamente.\n");
+51: }
+52: } while(opcao != 0);
+53:
+54: return 0;
+55: }
+56:
+57: void menu() {
+58: printf("\nSistema de Gestão de Notas\n");
+59: printf("1. Cadastrar Alunos\n");
+60: printf("2. Atribuir Notas\n");
+
+61: printf("3. Processar Notas\n");
+62: printf("4. Exibir Resultados\n");
+63: printf("5. Editar Resultado\n");
+64: printf("0. Sair\n");
+65: printf("Escolha uma opção: ");
+66: }
+67:
+68: void cadastrarAlunos(Aluno alunos[]) {
+69: for(int i = 0; i < NUM_ALUNOS; i++) {
+70: printf("Digite o nome do aluno %d: ", i + 1);
+71: scanf(" %[^\n]", alunos[i].nome);
+72: }
+73: }
+74:
+75: void atribuirNotas(Aluno alunos[]) {
+76: for(int i = 0; i < NUM_ALUNOS; i++) {
+77: printf("Atribuindo notas para %s\n", alunos[i].nome);
+78: for(int j = 0; j < NUM_NOTAS; j++) {
+79: do {
+80: printf("Digite a nota %d (0-10): ", j + 1);
+81: scanf("%f", &alunos[i].notas[j]);
+82: if(alunos[i].notas[j] < 0 || alunos[i].notas[j] > 10) {
+83: printf("Nota inválida. Digite uma nota entre 0 e 10.\n");
+84: }
+85: } while(alunos[i].notas[j] < 0 || alunos[i].notas[j] > 10);
+86: }
+87: }
+88: }
+89:
+90: void processarNotas(Aluno alunos[]) {
+91: for(int i = 0; i < NUM_ALUNOS; i++) {
+92: alunos[i].nota_total = 0;
+93: for(int j = 0; j < NUM_NOTAS; j++) {
+94: alunos[i].nota_total += alunos[i].notas[j];
+95: }
+96: alunos[i].media = alunos[i].nota_total / NUM_NOTAS;
+97:
+98: if(alunos[i].media < 4) {
+99: strcpy(alunos[i].resultado, "Reprovado");
+100: } else if(alunos[i].media >= 4 && alunos[i].media <= 6) {
+101: strcpy(alunos[i].resultado, "Recuperação");
+102: } else {
+103: strcpy(alunos[i].resultado, "Aprovado");
+104: }
+105: }
+106: }
+107:
+108: void exibirResultados(Aluno alunos[]) {
+109: for(int i = 0; i < NUM_ALUNOS; i++) {
+110: printf("Aluno: %s\n", alunos[i].nome);
+111: printf("Nota Total: %.2f\n", alunos[i].nota_total);
+112: printf("Média: %.2f\n", alunos[i].media);
+113: printf("Resultado: %s\n", alunos[i].resultado);
+114: printf("------------------------\n");
+115: }
+116: }
+117:
+118: void editarResultado(Aluno alunos[]) {
+119: int aluno_id;
+120: printf("Digite o número do aluno que deseja editar (1-5): ");
+
+121: scanf("%d", &aluno_id);
+122:
+123: if(aluno_id < 1 || aluno_id > NUM_ALUNOS) {
+124: printf("Aluno inválido.\n");
+125: return;
+126: }
+127:
+128: aluno_id--; // Ajustando para índice 0
+129: printf("Editando resultado para %s\n", alunos[aluno_id].nome);
+130: printf("Digite o novo resultado (Reprovado, Recuperação, Aprovado): ");
+131: scanf(" %[^\n]", alunos[aluno_id].resultado);
+132: }
